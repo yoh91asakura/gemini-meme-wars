@@ -36,7 +36,7 @@ interface GameStore {
   gold: number;
   wins: number; // New: Track total wins for scaling difficulty
   lastRolledCard: Card | null; // For reveal animation
-  rollGacha: () => void;
+  rollGacha: (skipRevealScreen?: boolean) => void;
   setDeck: (cards: Card[]) => void;
   equipCard: (card: Card) => void;
   unequipCard: (cardId: string) => void;
@@ -80,7 +80,7 @@ export const useGameStore = create<GameStore>()(
       wins: 0,
       lastRolledCard: null,
 
-      rollGacha: () => {
+      rollGacha: (skipRevealScreen = false) => {
         const state = get();
         const GACHA_COST = 50; // Fixed cost for now
 
@@ -107,7 +107,7 @@ export const useGameStore = create<GameStore>()(
               inventory: newInventory,
               deck: newDeck,
               lastRolledCard: finalCard,
-              gameState: 'gacha_reveal'
+              gameState: skipRevealScreen ? state.gameState : 'gacha_reveal'
             });
           } else {
             // New Card
@@ -115,7 +115,7 @@ export const useGameStore = create<GameStore>()(
               gold: state.gold - GACHA_COST,
               inventory: [...state.inventory, finalCard],
               lastRolledCard: finalCard,
-              gameState: 'gacha_reveal'
+              gameState: skipRevealScreen ? state.gameState : 'gacha_reveal'
             });
           }
         }

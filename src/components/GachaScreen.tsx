@@ -40,9 +40,9 @@ export const GachaScreen = () => {
       interval = setInterval(() => {
         const currentState = useGameStore.getState();
         if (currentState.gold >= 50) {
-          rollGacha();
+          rollGacha(true); // Skip reveal screen during auto-roll
         }
-      }, 200); // Roll toutes les 200ms quand auto-roll activé
+      }, 500); // Roll toutes les 500ms quand auto-roll activé (plus lent)
     }
 
     return () => {
@@ -172,6 +172,15 @@ export const GachaScreen = () => {
       <div className="flex flex-col sm:flex-row justify-between items-center p-6 bg-slate-800 border-b border-slate-700 shadow-lg z-10 rounded-lg mb-6">
         <div className="flex items-center gap-6">
           <h1 className="text-2xl font-black text-yellow-400 italic tracking-tighter">GEMINI MEME WARS</h1>
+          {autoRoll && (
+            <div className="flex items-center gap-2 bg-red-600/80 px-3 py-2 rounded-lg border border-red-500 animate-pulse">
+              <span className="text-white text-lg">🔄</span>
+              <div className="text-white font-bold text-sm">
+                AUTO-ROLL ACTIVE
+                <div className="text-red-200 text-xs">Click STOP to disable</div>
+              </div>
+            </div>
+          )}
           <nav className="flex bg-slate-700 rounded-lg p-1 gap-1">
             <button onClick={() => setActiveTab('summon')} className={`px-4 py-1 rounded-md text-sm font-bold transition-all duration-150 ${activeTab === 'summon' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}>SUMMON</button>
             <button onClick={() => setActiveTab('deck')} className={`px-4 py-1 rounded-md text-sm font-bold transition-all duration-150 ${activeTab === 'deck' ? 'bg-blue-500 text-white' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}>DECK</button>
@@ -216,7 +225,7 @@ export const GachaScreen = () => {
                     : 'bg-green-600 hover:bg-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.6)]'
                 }`}
               >
-                {autoRoll ? '⏹️ STOP AUTO-ROLL' : '▶️ START AUTO-ROLL'}
+                {autoRoll ? '⏹️ STOP AUTO-ROLL' : '🔄 START AUTO-ROLL'}
               </button>
               
               {/* Enhanced roll button with better mobile UX */}
