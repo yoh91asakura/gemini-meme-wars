@@ -84,8 +84,8 @@ export const CombatScreen = () => {
           </div>
 
           {/* Player Hand */}
-          <div className="flex flex-col">
-            <div className="text-xs text-slate-400 font-bold mb-2 text-center">YOUR HAND</div>
+          <div className="bg-slate-800/90 backdrop-blur-md border border-slate-700 rounded-lg p-4">
+            <div className="text-sm text-slate-300 font-bold mb-3 text-center">Your Cards</div>
             <div className="flex justify-center gap-2 overflow-x-auto scrollbar-hide">
               {deck.map((card, index) => {
                 const activeCard = activeCards.find(ac => ac.cardId === card.id);
@@ -109,9 +109,9 @@ export const CombatScreen = () => {
               })}
               
               {deck.length === 0 && (
-                <div className="text-center text-slate-400 italic p-4 bg-slate-800/80 backdrop-blur-sm rounded-lg border border-slate-700">
-                  <div className="text-sm">No cards equipped!</div>
-                  <div className="text-xs opacity-70">Visit deck builder</div>
+                <div className="text-center text-slate-400 italic py-8">
+                  <div className="text-sm mb-1">No cards equipped!</div>
+                  <div className="text-xs opacity-70">Visit deck builder to equip cards</div>
                 </div>
               )}
             </div>
