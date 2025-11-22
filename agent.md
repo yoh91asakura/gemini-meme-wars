@@ -48,6 +48,13 @@
 ## 3. Development Workflow (Strict)
 Follow this cycle for every feature to ensure stability and testability.
 
+### Code Integrity Rules (CRITICAL)
+*   **NEVER** rename existing functions, components, or files without explicit justification.
+*   **NEVER** create duplicate implementations of existing functionality.
+*   **ALWAYS** extend existing code rather than replacing it.
+*   **ALWAYS** respect the established architecture layers - do not mix concerns.
+*   **ALWAYS** check for existing implementations before creating new ones.
+
 ### Step 1: Logic & Testing (TDD)
 *   Define interfaces in `src/game/logic/types.ts`.
 *   Implement pure logic functions in `src/game/logic/`.
@@ -77,3 +84,7 @@ Follow this cycle for every feature to ensure stability and testability.
 ## 5. Commands
 *   **Test**: `npx vitest run`
 *   **Dev Server**: `npm run dev`
+
+## 6. Development Rules
+*   **NEVER** use mock data or simplified implementations. Always use the complete system and real data.
+*   **ALWAYS** integrate with existing game logic, stores, and data structures.

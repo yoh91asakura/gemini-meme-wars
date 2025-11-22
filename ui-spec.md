@@ -1,209 +1,353 @@
-<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
+# UI Spec – Gemini Meme Wars
 
-# si je fais ça mon agent.md sera trop gros, je prefere que tu fasse juste le ui spec, on le référencera. Le ui spec doivent permettre de bien comprendre le roll, l'ethétique des carts full art a la anime card et avoir un ui qui respecte les best pratice actuelle
+## 1. Objectifs et Philosophie Design (2025)
 
-Voici un brouillon complet de `ui-spec.md` que tu peux ajouter à ton repo et référencer depuis `agent.md`.[^1][^2]
+Ce document établit les standards techniques et esthétiques pour Gemini Meme Wars et sert de source de vérité unique pour toute l’interface utilisateur. [file:11][web:18]  
+**Vision** : Un gacha "Hyper-Premium" qui combine l’intensité visuelle des TCG modernes (Marvel Snap, Shadowverse, Pocket TCG) avec la fluidité et la réactivité d’une application mobile native. [file:11][web:22]
 
-***
+L’UI doit maximiser la lisibilité, la sensation de réactivité (< 100 ms perçus) et la compréhension de l’état de jeu, tout en restant suffisamment minimaliste côté chrome pour laisser la place aux cartes et aux effets visuels. [web:22][web:24]  
+Tous les écrans (combat, roll, deck, inventaire, lobby) doivent respecter les mêmes principes, tokens et composants décrits dans ce document. [file:11][web:18]
 
-### UI Spec – Gemini Meme Wars
+### 1.1 Piliers Design
 
-#### 1. Objectifs et périmètre
+1. **Zero-Latency Feel** : les interactions doivent être perçues comme instantanées (< 100 ms), les animations venant accompagner mais jamais bloquer l’input. [web:22][web:38]  
+2. **Mobile-First Immersion** : l’interface est pensée pour un usage à une main, [translate:Thumb-Driven], avec les actions critiques dans les 40 % inférieurs de l’écran. [web:44][web:53]  
+3. **Cognitive Ease** : chaque écran a un objectif principal clair et une hiérarchie visuelle stricte, avec un minimum de bruit et de chrome superflu. [web:42][web:48]  
+4. **Inclusive by Default** : conformité WCAG 2.2 AA dès la conception, y compris cibles tactiles, contrastes, gestion du mouvement et alternatives aux gestes complexes. [web:39][web:61]
 
-Ce document définit les règles de l’interface utilisateur pour Gemini Meme Wars : mise en page, esthétique des cartes full art, écrans de roll, deck et combat.[^3][^1]
-L’objectif est de garantir une UI cohérente, lisible, responsive (mobile‑first) et suffisamment “premium” pour un gacha PvP moderne.[^4][^2]
+---
 
-Toute nouvelle UI doit respecter ce spec ; si un besoin n’y apparaît pas, il doit être d’abord ajouté ici avant d’être codé.[^5][^1]
-L’UI doit rester centrée joueur : lisibilité instantanée, peu d’effort cognitif, feedback immédiat à chaque action.[^6][^1]
+## 2. Système de Design & Tokens 2.0
 
-#### 2. Direction artistique générale
+L’interface repose sur un système de design tokenisé à trois niveaux pour assurer cohérence, scalabilité et théming futur. [file:11][web:18]  
+Les composants n’emploient jamais de valeurs en dur, uniquement des références de tokens. [web:18][web:59]
 
-L’esthétique vise un mélange “full art anime card game” moderne (Shadowverse, Runeterra, mobile gacha) avec des emojis comme motif central.[^7][^8]
-Les cartes sont des vignettes hautement illustrées, avec une grande illustration centrale et un chrome minimaliste qui met l’art en avant plutôt que des bordures complexes.[^9][^7]
+### 2.1 Niveaux de tokens et convention de nommage
 
-Les personnages et emojis doivent paraître vivants : poses dynamiques, silhouettes claires, utilisation de compositions type “rule of thirds” pour éviter les visuels plats.[^7][^9]
-La palette générale tend vers le coloré et saturé mais avec un fond d’interface plus neutre (bleu nuit, gris chaud) pour laisser les cartes et projectiles dominer visuellement.[^10][^9]
+- **Tokens de base (reference tokens)** : valeurs brutes typées (couleurs, espaces, rayons, durées). [web:18][web:70]  
+- **Tokens sémantiques** : noms fonctionnels (ex. `color.bg.canvas`, `spacing.layout.gutter`). [web:18][web:33]  
+- **Tokens composants** : mapping pour un composant précis (ex. `card.frame.border`, `button.primary.background`). [web:18][web:59]
 
-Les rares et cartes clés peuvent s’inspirer des cartes promo anime (cadres plus brillants, particules, halo léger) sans nuire à la lisibilité du texte.[^11][^10]
-Les avatars, HUD et boutons gardent un style simple et propre pour éviter la surcharge, la complexité visuelle étant réservée aux cartes et au gacha.[^1][^3]
+Convention de nommage recommandée : `category.role.modifier.state` (par ex. `color.surface.primary.hover`). [web:33][web:59]  
+Tout nouveau style visuel doit d’abord être ajouté comme token sémantique, puis consommé par les composants. [web:18][web:59]
 
-#### 3. Layout global et responsive
+### 2.2 Palette Sémantique (Theming)
 
-Le jeu est pensé en mode portrait mobile‑first, avec une mise en page qui s’adapte ensuite au desktop sans changer les hiérarchies visuelles.[^12][^13]
-La zone centrale de combat (canvas) est toujours prioritaire, encadrée par des panneaux UI latéraux ou supérieurs qui ne masquent jamais les projectiles.[^13][^1]
+#### 2.2.1 Couleurs structurelles
 
-Breakpoints principaux : petit mobile, grand mobile, tablette verticale, desktop, chacun réorganisant les panneaux sans changer l’ordre logique (combat au centre, cartes proches des avatars, HUD en haut).[^2][^14]
-Sur mobile, la navigation doit être possible avec un pouce : boutons principaux en bas ou en zones faciles d’accès, tailles de cibles tactiles ≥ 48 px.[^2][^6]
+Palette sombre, neutre, pour mettre les cartes et les VFX en avant. [file:11][web:24]
 
-Sur desktop, les panneaux peuvent être plus espacés, avec une grille plus large pour le deck et l’inventaire, mais en conservant les mêmes composants.[^15][^2]
-Aucun écran ne doit imposer un scroll vertical continu pour les actions critiques (combat, roll, gestion de deck) : tout doit être visible ou accessible par onglets/panels.[^1][^2]
+| Token                       | Valeur (Réf)        | Usage principal                                      |
+| :-------------------------- | :------------------ | :-------------------------------------------------- |
+| `color.bg.canvas`           | `#0f172a` (Slate 900) | Fond global de l’application (zone morte)        |
+| `color.bg.surface.base`     | `#1e293b` (Slate 800) | Panneaux, cartes (fond)                           |
+| `color.bg.surface.elevated` | `#334155` (Slate 700) | Modales, tooltips, overlays                       |
+| `color.border.subtle`       | `rgba(255,255,255,0.1)` | Séparateurs, bordures neutres                   |
+| `color.text.primary`        | `#f8fafc` (Slate 50) | Titres, valeurs critiques                          |
+| `color.text.secondary`      | `#94a3b8` (Slate 400) | Labels, descriptions, métadonnées                 |
 
-#### 4. Composant Carte full art (référence visuelle)
+Les contrastes texte/fond doivent respecter au minimum 4.5:1 pour le texte normal et 3:1 pour le texte large. [web:39][web:35]  
+Les contrastes des composants non textuels (icônes, boutons) doivent viser au moins 3:1 avec leur arrière‑plan. [web:61][web:35]
 
-Les cartes sont des rectangles verticaux, ratio approximatif 2:3, avec un art plein cadre occupant la majorité de la surface.[^8][^7]
-L’illustration (emoji ou personnage) doit être lisible même en petite taille ; le sujet principal ne doit pas être centré sur le ventre mais sur le visage/haut du corps.[^9][^7]
+#### 2.2.2 Couleurs fonctionnelles & rareté
 
-Éléments fixes de chaque carte : zone d’art, bandeau de nom, badge de rareté, zone de stats, barre de mana en bas.[^8][^7]
-Le bandeau de nom est simple et propre (fond légèrement opaque sur l’art), avec typographie claire et hiérarchie lisible entre nom et rareté.[^7][^9]
+| Token                      | Rôle                     | Hex / Gradient                                             |
+| :------------------------- | :----------------------- | :--------------------------------------------------------- |
+| `color.brand.primary`      | Action principale (CTA)  | `#3b82f6` (Blue 500)                                      |
+| `color.utility.success`    | Confirmation, HP, buff   | `#22c55e` (Green 500)                                     |
+| `color.utility.warning`    | Attention, pré‑alerte    | `#eab308` (Yellow 500)                                    |
+| `color.utility.danger`     | Erreur, ennemi, dégâts   | `#ef4444` (Red 500)                                       |
+| `color.utility.info`       | Infos neutres            | `#38bdf8` (Sky 400)                                       |
+| `color.rarity.common`      | Base frame               | `#94a3b8` (Slate 400)                                     |
+| `color.rarity.rare`        | Rare frame               | `#3b82f6` (Blue 500) + glow léger                         |
+| `color.rarity.epic`        | Epic frame               | `#a855f7` (Purple 500) + particules subtiles              |
+| `color.rarity.legendary`   | Legendary frame          | `linear-gradient(135deg,#f59e0b,#ef4444)` + FX holographiques |
 
-La zone de stats ne montre qu’un résumé : HP, Force, Esquive, Regen mana, sous forme d’icônes + valeurs, pour limiter le texte.[^16][^8]
-La barre de mana occupe toute la largeur de la carte, avec couleur et remplissage reflétant l’état de charge d’ulti de cette carte.[^8][^1]
+Le code couleur de rareté doit être cohérent sur tous les écrans (cartes, roll, inventaire, récompenses). [file:11][web:32]  
+Les effets additionnels (glow, particules) doivent rester subtils pour ne pas nuire à la lisibilité du texte et des stats. [file:11][web:36]
 
-Code couleur par rareté : fond ou cadre plus brillant pour les épics et légendaires, mais sans texture trop dense ni ornementation excessive.[^10][^7]
-Les bordures et ombres des cartes utilisent toujours les mêmes épaisseurs et styles pour assurer une cohérence et faciliter la lecture sur des grilles denses.[^5][^1]
+### 2.3 Typographie & échelle fluide
 
-#### 5. UI de combat (CombatScreen)
+L’ensemble des textes utilise une police sans‑serif moderne et lisible (ex. Inter), avec éventuellement une variante plus condensée pour les nombres. [file:11][web:38]  
+Toutes les tailles sont exprimées en `rem` (base 16 px) pour permettre le zoom utilisateur. [file:11][web:19]
 
-L’écran de combat est structuré autour de l’arène centrale (canvas), avec un avatar à gauche et un à droite, en miroir.[^17][^18]
-Les cartes du joueur sont affichées en colonne ou éventail près de son avatar (gauche), leurs barres de mana visibles en permanence.[^17][^8]
+Échelle recommandée : [file:11][web:19]  
+- `text.display` : 2.5rem (40 px) – gros chiffres de dégâts, titres Victoire/Défaite. [file:11][web:22]  
+- `text.h1`      : 1.5rem (24 px) – titres d’écran principaux. [file:11][web:19]  
+- `text.h2`      : 1.25rem (20 px) – noms de cartes, sous‑titres. [file:11][web:36]  
+- `text.body`    : 1rem (16 px) – texte standard (descriptions, menus). [file:11][web:19]  
+- `text.caption` : 0.875rem (14 px) – stats secondaires, labels discrets. [file:11][web:19]  
+- `text.tiny`    : 0.75rem (12 px) – mentions légales, métadonnées. [file:11][web:19]
 
-Les avatars sont entièrement fixes et ne se déplacent jamais. Lorsque la stat d'esquive d'un avatar proc lors d'un impact, une animation d'esquive (dodge visuel, lueur, effet de particules) se joue sur l'avatar concerné sans mouvement de position.
+Le line‑height doit se situer entre 1.4 et 1.6 pour tout texte de paragraphe, y compris en mobile. [web:19][web:13]  
+Le jeu doit supporter une augmentation de la taille du texte jusqu’à 200 % sans casser les layouts critiques. [web:39][web:64]
 
-Les cartes ennemies (IA ou autre joueur) sont affichées côté droit, en version réduite (emoji + état d’ulti), pour éviter la surcharge tout en donnant des infos de lecture.[^18][^16]
-Les jauges de vie du joueur et de l’ennemi sont situées en haut de l’écran, barres larges, couleurs distinctes, avec valeurs numériques optionnelles.[^2][^1]
+### 2.4 Espacement, rayons et ombres
 
-Le timer de round et l’état du match (début, fin, victoire, défaite) sont placés au centre haut, de manière discrète mais visible.[^4][^1]
-Aucun panneau ou élément n’empiète sur la zone où les projectiles voyagent, sauf overlays temporels (pause, fin de match).[^13][^1]
+- Grille d’espacement basée sur 4 px : 4, 8, 12, 16, 24, 32, 48, 64… (`spacing.xs|sm|md|lg|xl`). [file:11][web:13]  
+- Rayons d’angle limités : 4 px (petits éléments), 8 px (boutons, cartes compactes), 16 px (grandes cartes, modales). [web:25][web:60]
 
-Sur mobile, les panneaux de cartes peuvent être légèrement semi‑transparents et collés aux bords pour maximiser l’espace de jeu.[^12][^13]
-Les touches ou boutons d’actions (pause, paramètres) sont placés dans les coins supérieurs, de taille confortable et bien espacés des éléments cliquables secondaires.[^6][^2]
+Ombres / elevation standardisées : [file:11][web:12]  
+- `shadow.sm` : petits éléments, boutons secondaires, chips. [file:11][web:12]  
+- `shadow.md` : cartes au repos, panneaux flottants. [file:11][web:12]  
+- `shadow.lg` : cartes survolées, modales, overlays importants. [file:11][web:12]  
+- `shadow.glow.*` : halos colorés pour focus et raretés élevées. [file:11][web:30]
 
-#### 6. UI de roll / gacha (RollScreen)
+Aucun composant ne doit définir sa propre ombre hors de ces presets, pour garantir la cohérence globale. [web:18][web:21]  
+Les modifications de profondeur (hover, focus) se font toujours par changement d’ombre, légère translation et éventuelle variation de luminosité. [web:26][web:60]
 
-L’écran de roll met en scène une carte ou un groupe de cartes au centre, avec une animation claire qui crée anticipation puis récompense.[^19][^20]
-La zone principale contient la carte révélée en grand format, centrée, avec animation d’apparition (scale‑in, glow, légères particules).[^21][^16]
+### 2.5 Motion & micro‑interactions
 
-Le bouton de roll (single, multi) est situé en bas, large, avec texte, icône de monnaie et coût clairement affiché.[^20][^19]
-Les monnaies disponibles (soft, premium) sont affichées en haut ou en haut‑droite, avec icônes distinctes et valeurs lisibles.[^20][^10]
+- Durées : `motion.fast` (120–150 ms), `motion.normal` (180–220 ms), `motion.slow` (250–350 ms). [file:11][web:26]  
+- Easing : `ease-out` pour entrées rapides, `ease-in-out` pour transitions de page, courbes Bézier custom pour les cartes. [file:11][web:26]
 
-Un bandeau ou zone secondaire montre l’historique récent des pulls (petites cartes en ligne ou grille réduite).[^21][^20]
-En cas de multi‑roll, les cartes sont d’abord affichées en grille compacte, puis un tap sur une carte peut la passer en mode “full reveal” pour profiter de l’animation et de l’art.[^16][^20]
+Les animations utilisent en priorité `transform` et `opacity` pour profiter de l’accélération GPU. [file:11][web:26]  
+Les micro‑interactions doivent clarifier l’état (cliqué, prêt, erreur) sans distraire du gameplay. [web:22][web:42]
 
-Les raretés élevées déclenchent une couche d’effets supplémentaires (halo coloré, flash d’arrière‑plan, particules), mais les durées doivent rester courtes pour ne pas frustrer.[^19][^20]
-Toutes les actions de roll sont irréversibles visualisées : transitions claires, pas de déclenchement sans feedback fort (son, animation, vibration le cas échéant).[^6][^1]
+---
 
-#### 7. UI de deck et inventaire (DeckBuilderScreen)
+## 3. Composant Carte "Full Art"
 
-L’écran deck/inventaire doit permettre de comprendre et modifier un deck en quelques secondes, même sur mobile.[^22][^8]
-En haut ou sur un panneau latéral, afficher les stats agrégées du joueur : HP total, Force, Esquive, Regen mana, éventuellement niveau moyen ou puissance.[^22][^8]
+Les cartes sont le support principal de l’identité visuelle du jeu et doivent être impressionnantes sans sacrifier la lisibilité. [file:11][web:36]  
+Elles doivent rester reconnaissables en petit format (grille, liste) et spectaculaires en mode inspect / zoom. [file:11][web:60]
 
-La zone principale présente : une grille de toutes les cartes possédées et une rangée de slots de deck actif (4–6).[^23][^22]
-Les slots de deck sont visuellement différenciés (cadres plus grands, fond distinct, étiquettes de slot) pour les distinguer de l’inventaire brut.[^1][^8]
+### 3.1 Structure anatomique (Z croissant)
 
-Interaction recommandée : taper ou drag‑and‑drop une carte de l’inventaire vers un slot de deck remplace ou ajoute la carte au deck.[^24][^2]
-À chaque changement de deck, les stats agrégées sont mises à jour en temps réel avec une légère animation de nombre (count‑up/down) pour renforcer le lien de cause à effet.[^25][^6]
+1. **Frame/Border** : indique la rareté (épaisseur, couleur, FX). [file:11][web:28]  
+2. **Artwork Layer** : illustration plein cadre au format 2:3, avec composition centrée sur le personnage/emoji. [file:11][web:36]  
+3. **Gradient Overlay** : dégradé noir en bas pour assurer un contraste texte > 4.5:1. [file:11][web:36]  
+4. **Content Layer** : bandeaux de nom, stats, coût, badges. [file:11][web:36]  
+5. **FX Layer** : particules, reflets, lens flare (surtout pour Epic/Legendary). [file:11][web:28]  
+6. **Interaction Layer** : zone tactile complète de la carte, capture des événements pointer/touch. [file:11][web:60]
 
-Sur desktop, l’inventaire peut occuper la partie gauche et les slots deck + stats la partie droite, avec plus de colonnes.[^15][^2]
-Sur mobile, l’inventaire peut être en bas (scroll horizontal ou petite grille), le deck en haut, pour un usage confortable au pouce.[^12][^13]
+### 3.2 Contenu de la carte
 
-#### 8. Micro‑interactions et animations
+- **Nom** : en bas ou en haut selon la composition, toujours sur bandeau semi‑opaque. [file:11][web:36]  
+- **Rareté** : badge visuel (icône + couleur) en coin, cohérent avec `color.rarity.*`. [file:11][web:28]  
+- **Stats clés** : HP, Force, Esquive, Regen mana, affichées avec icônes cohérentes et valeurs lisibles. [file:11][web:22]  
+- **Barre de mana/ulti** : en bas de carte, sur toute la largeur, avec progression colorée nette. [file:11][web:22]
 
-Chaque action utilisateur (tap sur bouton, sélection de carte, validation de roll) doit déclencher au moins un retour visuel rapide : changement d’état, petite animation, effet sonore.[^6][^1]
-Les micro‑interactions doivent utiliser des durées courtes (≈150–250 ms) et des easings doux pour garder un sentiment de réactivité.[^26][^6]
+Les détails complexes (compétences, effets passifs) sont consultables via un mode inspect pour éviter la surcharge sur la carte de base. [file:11][web:36]  
+Les textes ne doivent jamais se superposer directement à des zones d’illustrations très contrastées, sauf avec overlay dédié. [file:11][web:36]
 
-Les cartes réagissent au survol (desktop) ou à la sélection (mobile) par un léger lift, une ombre renforcée et éventuellement un glow discret.[^27][^7]
-Quand une carte charge son ulti, la barre de mana peut pulser légèrement ou changer de teinte à mesure qu’elle approche du seuil.[^26][^1]
+### 3.3 États visuels & interactions
 
-Quand l’ulti d’une carte est prêt, la carte entière peut entrer dans un état “ready” : halo coloré, pulsation lente, accentuation visuelle sans gêner la lisibilité du combat.[^26][^1]
-Au déclenchement de l’ulti, l’animation doit être nette mais brève : petit zoom, flash, vibration locale, puis retour rapide à l’état normal ou charging.[^27][^26]
+- **Idle** : scale 1.0, ombre `shadow.md`, couleurs normales. [file:11][web:26]  
+- **Hover (desktop) / Long press (mobile)** : scale ~1.05, `shadow.lg`, légère augmentation de brightness, affichage éventuel de tooltip. [file:11][web:26]  
+- **Active / Dragging** : scale ~1.1, opacité ~0.8, feedback haptique moyen, ghost dans la grille. [file:11][web:61]  
+- **Disabled (mana insuffisant)** : désaturation (60–80 %), opacité réduite, curseur `not-allowed` sur desktop. [file:11][web:19]  
+- **Ulti ready** : halo pulsant autour de la carte, shimmer lent sur le cadre, animation de barre de mana bouclée. [file:11][web:26]
 
-Les transitions entre écrans (lobby → combat, combat → résultat, lobby → roll) doivent être courtes et cohérentes, réutilisant les mêmes patterns (fade, slide, scale).[^3][^1]
-Éviter les animations trop longues ou lourdes qui cassent le rythme, surtout dans des boucles de jeu basées sur des rounds courts et répétés.[^2][^6]
+Les transitions entre états utilisent `motion.fast` et des easings doux pour éviter les à‑coups. [file:11][web:26]  
+En cas de `prefers-reduced-motion`, les changements d’état se limitent à des fades d’opacité et de couleur. [web:39][web:64]
 
-#### 9. Accessibilité, lisibilité et performance
+### 3.4 Rareté & FX
 
-Le contraste entre texte et fond doit respecter les bonnes pratiques (palettes color‑blind friendly, évitement de texte sur fond très saturé sans overlay).[^25][^1]
-Les tailles de police doivent rester lisibles sur petits écrans, avec possibilité d’augmenter la taille via des préférences si nécessaire.[^1][^6]
+- **Common** : cadre discret, ombre simple, aucun FX. [file:11][web:28]  
+- **Rare** : cadre coloré, glow léger, shimmer très subtil. [file:11][web:28]  
+- **Epic** : cadre saturé, particules modérées, glow marqué. [file:11][web:28]  
+- **Legendary** : cadre gradient, FX holographiques, particules riches, mais texte toujours lisible. [file:11][web:28]
 
-Les informations critiques (HP, mana, état d’ulti, coût des rolls) ne doivent jamais reposer uniquement sur la couleur : utiliser aussi des icônes ou formes.[^3][^1]
-Les boutons importants doivent être clairement distingués des actions secondaires (couleur, taille, label).[^25][^2]
+Les FX sont associés à la rareté via des tokens composants (`card.fx.legendary.particles`, etc.) pour faciliter l’évolutivité. [web:18][web:32]  
+Les performances doivent être surveillées sur appareils milieu de gamme pour éviter les chutes de FPS lors de multiples animations de cartes. [web:26][web:72]
 
-Les animations doivent rester légères et optimisées : privilégier les transformations GPU (translate, scale, opacity) plutôt que les effets coûteux (blur étendu, box‑shadow massifs).[^26][^6]
-Éviter les layout shifts pendant les combats : pas de redimensionnement dynamique de panneaux qui ferait bouger la zone de jeu ou les cartes.[^2][^1]
+---
 
-#### 10. Règles de cohérence et extension
+## 4. CombatScreen
 
-Tous les écrans partagent les mêmes styles de boutons, panneaux, cartes et typographie ; toute variation doit être justifiée par une fonction (ex : bouton principal vs secondaire).[^25][^1]
-Les nouveaux composants UI doivent réutiliser les styles existants (tokens, classes, composants partagés), et non introduire de nouveaux patterns isolés.[^5][^2]
+L’écran de combat est la scène principale : il doit être lisible, nerveux et dégagé au centre. [file:11][web:22]  
+Le joueur doit comprendre en un coup d’œil l’état du match (HP, mana, ultis, timer). [file:11][web:20]
 
-Avant d’ajouter un nouvel élément visuel (badge, icône, style de carte), vérifier qu’il ne duplique pas un pattern existant déjà disponible dans le design system.[^28][^5]
-Tout changement majeur de layout ou de langage visuel doit être d’abord saisi dans ce `ui-spec.md` puis implémenté ensuite en code.[^5][^1]
+### 4.1 Layout général
 
-***
+- **Orientation** : mobile portrait, responsive jusqu’à tablette/desktop. [file:11][web:16]  
+- **Top (HUD ennemi)** : barre HP, état, buffs/debuffs. [file:11][web:22]  
+- **Centre (Arena)** : zone de projectiles et VFX, strictement sans UI persistante. [file:11][web:22]  
+- **Bas (Thumb Zone)** : main de cartes, barre de mana, avatar joueur, actions secondaires. [file:11][web:44]
 
-Tu peux maintenant :
+La mise en page doit rester stable et éviter tout layout shift pendant le combat. [file:11][web:26]  
+Les overlays (pause, résultat) remplacent temporairement l’affichage mais sont clairement distincts du HUD. [file:11][web:16]
 
-- Ajouter ce fichier comme `ui-spec.md` à la racine.[^29][^5]
-- Dans `agent.md`, juste dire que toute UI doit suivre `ui-spec.md` pour la mise en page, les cartes et les écrans roll/deck/combat, sans recopier tous les détails.[^29][^2]
-<span style="display:none">[^30][^31][^32][^33][^34]</span>
+### 4.2 HUD
 
-<div align="center">⁂</div>
+- **HP ennemi** : barre pleine largeur en haut, couleur `color.utility.danger`, valeurs numériques optionnelles. [file:11][web:22]  
+- **Avatar ennemi** : à proximité de la barre, avec animation de hit (shake, flash). [file:11][web:22]  
+- **Buffs/debuffs** : ligne d’icônes avec tooltips explicites au survol / long press. [file:11][web:42]
 
-[^1]: https://genieee.com/best-practices-for-game-ui-ux-design/
+- **HP joueur** : barre près de l’avatar joueur (bas/gauche), couleur `color.utility.success`. [file:11][web:22]  
+- **Timer** : centré en haut, bien lisible mais discret, avec changement de couleur ou pulse en fin de round. [file:11][web:20]
 
-[^2]: https://orthoplexsolutions.com/web-development/web-app-ui-ux-best-practices-and-trends-in-2025-for-optimal-user-experience/
+### 4.3 Main de cartes & mana
 
-[^3]: https://gamecrio.com/5-game-ui-ux-trends-in-2025-every-developer-should-follow/
+La main de cartes est ancrée en bas dans la [translate:Thumb Zone] pour une prise en main à une main. [web:44][web:51]  
+Le nombre de cartes visibles doit être optimisé (carrousel ou éventail) pour ne pas masquer l’arène. [file:11][web:22]
 
-[^4]: https://www.linkedin.com/pulse/mastering-game-uiux-best-practices-you-should-know-sunil-khobragade-p5qzf
+- **Main joueur** : cartes en ligne ou éventail, taille suffisante pour reconnaître l’art et l’état d’ulti. [file:11][web:22]  
+- **Barre de mana** : au‑dessus des cartes, progression claire, couleurs de seuil (normal, presque prêt, prêt). [file:11][web:22]
 
-[^5]: https://www.designsystemscollective.com/a-comprehensive-guide-to-atomic-design-and-design-tokens-in-modern-ui-ux-development-288a996a483a
+Les ultis prêts utilisent l’état `Ulti ready` de la carte (halo, shimmer, peut‑être léger son/FX) pour attirer l’œil. [file:11][web:26]  
+Les touches sont suffisamment grandes pour éviter les erreurs (≥ 44x44 px). [web:45][web:67]
 
-[^6]: https://nextnative.dev/blog/mobile-app-ui-design-best-practices
+### 4.4 Feedback & game juice
 
-[^7]: https://www.reddit.com/r/homemadeTCGs/comments/1jgeuvt/working_on_a_modern_card_style_for_anime_based/
+- **Dégâts** : textes flottants colorés, plus grands pour les gros critiques. [file:11][web:22]  
+- **Hit** : flash bref sur la cible, screen shake léger (option désactivable). [file:11][web:30]  
+- **Low HP** : vignette rouge pulsante, éventuellement sons de tension. [file:11][web:22]
 
-[^8]: https://gdkeys.com/the-card-games-ui-design-of-fairtravel-battle/
+Les VFX doivent rester lisibles : pas d’effets qui masquent complètement les avatars ou les projectiles. [file:11][web:48]  
+En mode `Reduced Motion`, la plupart des effets de secousse et de flash violent sont remplacés par des variations de couleur et des fades doux. [web:39][web:64]
 
-[^9]: https://www.clipstudio.net/how-to-draw/archives/161230
+---
 
-[^10]: https://www.reddit.com/r/gachagaming/comments/1hsfzx7/hot_take_the_gacha_game_industry_has_the_best/
+## 5. DeckBuilderScreen & Inventaire
 
-[^11]: https://draftsim.com/anime-mtg-cards/
+Objectif : permettre au joueur de comprendre, construire et modifier un deck très rapidement, même avec une grande collection. [file:11][web:32]  
+L’expérience doit se rapprocher d’un e‑commerce de cartes : recherche, filtres, tri, comparaison. [file:11][web:36]
 
-[^12]: https://www.youtube.com/watch?v=M7sD-1alYyw
+### 5.1 Layout
 
-[^13]: https://genieee.com/responsive-ui-design-for-games/
+- **Deck actif** : slots visibles (4–6), visuellement distincts de la grille d’inventaire. [file:11][web:22]  
+- **Inventaire** : grille de toutes les cartes possédées, scrollable, avec pagination ou virtualisation. [file:11][web:32]  
+- **Stats agrégées** : panneau affichant HP total, Force, Esquive, Regen mana, puissance moyenne. [file:11][web:22]
 
-[^14]: https://dev.to/gerryleonugroho/responsive-design-breakpoints-2025-playbook-53ih
+Sur mobile, l’inventaire peut être en bas avec scroll vertical, le deck en haut. [file:11][web:16]  
+Sur desktop, l’inventaire se place à gauche et le deck + stats à droite pour utiliser la largeur. [file:11][web:16]
 
-[^15]: https://blogs.spritegenix.com/responsive-web-design-best-practices-for-2025
+### 5.2 Filtres & tri
 
-[^16]: https://game-wisdom.com/critical/10-unique-mobile-games
+- **Filtres** : chips horizontales (rareté, type, élément, coût), état actif évident. [file:11][web:32]  
+- **Tri** : menu (Puissance, Rareté, Récents, Nom) avec état sélectionné persistant. [file:11][web:36]
 
-[^17]: https://www.youtube.com/watch?v=SpNiDQd-ics
+L’état des filtres et tris doit être clair pour éviter que le joueur pense avoir perdu des cartes. [file:11][web:19]  
+Les résultats doivent se rafraîchir sans flash complet de l’écran (animations légères de réorganisation). [file:11][web:26]
 
-[^18]: https://bounty-bash.com/auto-battler-guide.html
+### 5.3 Interactions deck/inventaire
 
-[^19]: https://www.theseus.fi/bitstream/handle/10024/805479/Dang_Thang.pdf?sequence=2
+- **Desktop** : drag & drop pour ajouter/retirer des cartes du deck. [file:11][web:42]  
+- **Mobile** : modèle tap‑to‑equip / tap‑to‑unequip comme alternative simple au drag & drop. [web:61][web:38]
 
-[^20]: https://www.gamerefinery.com/the-complete-guide-to-mobile-game-gachas-in-2022/
+Exemple (mobile) : tap sur une carte dans l’inventaire → si slot libre, elle est ajoutée, sinon ouvrir une modale pour choisir une carte à remplacer. [file:11][web:61]  
+Les stats agrégées se mettent à jour avec une animation de chiffres (count‑up/down) pour renforcer le lien cause‑effet. [file:11][web:26]
 
-[^21]: https://dribbble.com/tags/gacha
+Une vue inspect permet d’ouvrir une carte en plein écran, avec ses stats détaillées, ses compétences et son historique. [file:11][web:36]  
+Cette vue doit être accessible depuis le deck et depuis l’inventaire. [file:11][web:36]
 
-[^22]: https://www.deconstructoroffun.com/blog/2017/8/31/designing-a-strong-gacha
+---
 
-[^23]: https://play.google.com/store/apps/details?id=com.Tollopaja.DACAB
+## 6. Gacha & Roll (Summoning)
 
-[^24]: https://uxplaybook.org/articles/ui-fundamentals-best-practices-for-ux-designers
+Moments forts du jeu, doivent être gratifiants et contrôlables (skip facile). [web:41][web:30]  
+Le joueur doit comprendre clairement ce qu’il obtient et ce qu’il a dépensé. [file:11][web:43]
 
-[^25]: https://www.lyssna.com/blog/ui-design-principles/
+### 6.1 Layout & infos
 
-[^26]: https://www.smashingmagazine.com/2025/11/keyframes-tokens-standardizing-animation-across-projects/
+- **Zone centrale** : carte ou groupe de cartes à révéler, grande taille, centrée. [file:11][web:30]  
+- **Boutons roll** : en bas, large CTA, libellé explicite (ex. "Roll x1", "Roll x10") avec icône de monnaie + coût. [file:11][web:41]  
+- **Monnaies** : en haut (gauche/droite), solde des devises pertinentes (soft/hard) avec icônes distinctes. [file:11][web:41]
 
-[^27]: https://blog.maximeheckel.com/posts/advanced-animation-patterns-with-framer-motion/
+Un historique condensé des dernières cartes obtenues peut être affiché sous forme de bandeau ou de grille compacte. [file:11][web:32]  
+Les cartes très rares doivent ressortir clairement dans ce récapitulatif (cadre, FX, label de rareté). [file:11][web:30]
 
-[^28]: https://figr.design/blog/how-to-use-design-tokens
+### 6.2 Séquence d’animation
 
-[^29]: agent.md
+1. **Trigger** : le joueur appuie sur un bouton de roll, éventuellement avec un press prolongé pour charger. [file:11][web:41]  
+2. **Anticipation** : animation de coffre/orbe qui vibre, intensité visuelle modérée au départ. [file:11][web:30]  
+3. **Reveal** :
+   - Flash bref. [file:11][web:30]  
+   - Carte(s) face cachée apparaissent, puis flip 3D ou unmask. [file:11][web:30]  
+   - Couleur de l’aura/explosion varie selon la rareté (Gris → Bleu → Violet → Doré). [file:11][web:30]  
+4. **Result** : carte(s) full art affichée(s), avec options pour inspecter ou passer. [file:11][web:30]
 
-[^30]: https://www.facebook.com/groups/TGDAus/posts/29255516934096822/
+Le bouton "Skip" est toujours visible et accessible dès le début de la séquence, surtout pour les multi‑rolls. [file:11][web:43]  
+Les temps non interactifs ne doivent pas dépasser quelques secondes cumulé, afin de ne pas frustrer les joueurs intensifs. [web:41][web:57]
 
-[^31]: https://neta.art/use-cases/en/the-best-anime-style-game-UI-generator
+---
 
-[^32]: https://www.youtube.com/watch?v=w1SPnlOIR94
+## 7. Accessibilité & Inclusive Design
 
-[^33]: https://www.youtube.com/watch?v=EWdKNhDEifg
+L’UI vise la conformité WCAG 2.2 AA, avec une attention particulière portée aux critères liés au mobile et au jeu (mouvement, taille des cibles, focus non masqué). [web:39][web:64]  
+Les comportements spécifiques au jeu (drag, secousses, clignotements) doivent toujours avoir une alternative ou un réglage. [web:61][web:67]
 
-[^34]: https://www.youtube.com/watch?v=S4q969CPemc\&vl=fr
+### 7.1 Cibles tactiles & focus
 
+- **Taille minimale** : au moins 44x44 CSS px pour tous les boutons et zones interactives (cible globale incluant padding). [web:45][web:67]  
+- **Espacement** : éviter les cibles adjacentes collées, idéalement ≥ 8 px entre deux actions critiques. [web:52][web:50]
+
+Tous les éléments focusables ont un état de focus clairement visible (outline 2 px, forte couleur de contraste). [web:39][web:67]  
+Aucun élément ne doit être entièrement masqué lorsqu’il reçoit le focus (SC 2.4.11 "Focus not obscured"). [web:39][web:67]
+
+### 7.2 Contraste & couleur
+
+- Contraste texte/fond ≥ 4.5:1 par défaut, y compris sur textes en overlay sur illustration. [web:39][web:35]  
+- Palettes testées pour les principales formes de daltonisme ; les informations critiques ne reposent jamais uniquement sur la couleur. [web:27][web:35]
+
+Les icônes et pictos importants (HP, mana, ulti, erreur) ont également une forme distincte, pas seulement une couleur différente. [web:61][web:35]  
+Des outils de vérification de contraste sont intégrés au workflow design (Figma plugins, tests automatisés). [web:61][web:18]
+
+### 7.3 Mouvement & réductions
+
+Le jeu respecte la préférence système `prefers-reduced-motion` : [web:39][web:64]  
+- Désactivation des screen shakes. [file:11][web:30]  
+- Réduction des particules et des transitions complexes, remplacées par des fades simples. [file:11][web:26]  
+- Durées d’animation éventuellement raccourcies (ou supprimées) pour certains users. [web:64][web:71]
+
+Les effets susceptibles de provoquer de l’inconfort (flashs rapides, effets stroboscopiques) sont évités ou fortement limités. [web:39][web:64]  
+Les options d’accessibilité in‑game permettent d’ajuster l’intensité visuelle (VFX, post‑processing) séparément du reste. [file:11][web:71]
+
+### 7.4 Gestes & alternatives
+
+Toute action réalisable uniquement par drag & drop doit avoir une alternative à un seul pointer (tap, boutons). [web:61][web:67]  
+Exemple : trier ou réorganiser des cartes via boutons de repositionnement ou listes d’options, en plus du DnD. [web:61][web:52]
+
+Les interactions essentielles ne reposent pas sur des gestes non évidents (double tap, long swipe) sans signalisation claire. [web:64][web:55]  
+Les animations critiques (roll, victoire, défaite) restent skippables pour les profils sensibles. [web:41][web:43]
+
+---
+
+## 8. Haptics & Audio Feedback
+
+L’haptique renforce la lecture des actions sans devenir envahissante. [file:11][web:49]  
+Les vibrations suivent une gradation claire : légère (exploration), moyenne (actions), forte (événements majeurs). [file:11][web:26]
+
+- **Light** : hover carte, scroll tick dans l’inventaire, changement d’onglet. [file:11][web:49]  
+- **Medium** : validation de sélection, drop de carte dans le deck, activation d’ulti. [file:11][web:26]  
+- **Heavy** : gros dégâts subis, roll légendaire, victoire/défaite. [file:11][web:30]
+
+Une option permet de désactiver totalement l’haptique côté joueur. [web:71][web:64]  
+Les sons suivent la même logique de gradation (UI légère vs événements de gameplay). [file:11][web:20]
+
+---
+
+## 9. Implémentation technique (CSS / UI Layer)
+
+L’implémentation doit refléter fidèlement le système de design décrit précédemment. [file:11][web:18]  
+Les tokens sont exposés via variables CSS (`--color-…`, `--space-…`, etc.) ou via un thème central dans le moteur de jeu. [web:18][web:70]
+
+### 9.1 Layout & unités
+
+- Layout global : CSS Grid (ou équivalent moteur) pour structurer les grandes zones (HUD, arène, panels). [file:11][web:38]  
+- Layout local : Flexbox pour barres, listes et alignement dans les cartes. [file:11][web:38]
+
+Les tailles de texte, paddings et marges sont exprimées en `rem`, tandis que les conteneurs majeurs peuvent utiliser `%`, `vw` ou `vh`. [file:11][web:38]  
+Les breakpoints sont alignés sur les largeurs d’écran de référence (petit mobile, mobile, tablette, desktop). [file:11][web:16]
+
+### 9.2 Performance & optimisation
+
+- Usage de `will-change: transform, opacity` sur les éléments fréquemment animés. [file:11][web:26]  
+- Virtualisation / windowing sur les grandes listes (inventaire, historique de rolls) pour limiter le coût de rendu. [file:11][web:26]
+
+Les images de cartes sont servies en WebP/AVIF avec plusieurs résolutions selon le contexte (thumbnail, carte normale, full art). [file:11][web:38]  
+Les tests de performance incluent des scénarios de forte densité (nombre maximal de cartes animées, rolls en rafale). [file:11][web:26]
+
+---
+
+## 10. Cohérence, gouvernance & évolution
+
+Ce document est la référence unique pour toutes les décisions UI de Gemini Meme Wars. [file:11][web:18]  
+Toute divergence visuelle ou interactionnelle doit être justifiée et, si validée, intégrée ici avant d’être implémentée. [web:18][web:21]
+
+Les tokens, composants et patterns sont versionnés, avec journal des changements (changelog) pour permettre rollback si nécessaire. [web:18][web:59]  
+Des tests de régression visuelle (visual regression) sont exécutés à chaque release majeure pour détecter les écarts involontaires. [web:18][web:59]
+
+Les nouveaux écrans doivent composer avec les composants existants avant d’introduire de nouveaux patterns. [file:11][web:21]  
+Les designers et développeurs sont responsables de vérifier toute nouveauté UI à l’aune de ce `ui-spec.md`. [file:11][web:18]

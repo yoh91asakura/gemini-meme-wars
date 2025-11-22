@@ -48,7 +48,7 @@ export const HUD = () => {
   };
 
   return (
-    <div className="absolute top-0 left-0 w-full p-4 flex flex-col sm:flex-row justify-between items-center sm:items-start gap-4 pointer-events-none z-20">
+    <div className="absolute top-0 left-0 w-full p-2 md:p-4 flex flex-col sm:flex-row justify-between items-center sm:items-start gap-2 md:gap-4 pointer-events-none z-20">
       <ProgressBar
         current={playerHP}
         max={playerMaxHP}
@@ -56,11 +56,11 @@ export const HUD = () => {
         label="🧙‍♂️"
         align="left"
       />
-      <div className="flex flex-col items-center gap-2 bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10">
-        <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 drop-shadow-lg italic">VS</div>
+      <div className="flex flex-col items-center gap-1 md:gap-2 bg-black/60 backdrop-blur-md px-3 py-1 md:px-4 md:py-2 rounded-xl border border-white/10">
+        <div className="text-2xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 drop-shadow-lg italic">VS</div>
         <button
           onClick={handleSkipBattle}
-          className="pointer-events-auto px-3 py-1 bg-gradient-to-b from-yellow-500 to-orange-600 text-black font-bold text-sm rounded-lg hover:from-yellow-400 hover:to-orange-500 transition-all hover:scale-105 shadow-lg active:scale-95"
+          className="pointer-events-auto px-2 py-1 md:px-3 md:py-1 bg-gradient-to-b from-yellow-500 to-orange-600 text-black font-bold text-xs md:text-sm rounded-lg hover:from-yellow-400 hover:to-orange-500 transition-all hover:scale-105 shadow-lg active:scale-95 touch-manipulation"
         >
           ⏭️ SKIP
         </button>

@@ -1,3 +1,299 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Design Tokens System 2.0 - Based on ui-spec.md Section 2 */
+
+:root {
+  /* Base Tokens (Reference) */
+  
+  /* Colors - Structural */
+  --color-canvas: #0f172a; /* Slate 900 - Global background */
+  --color-surface-base: #1e293b; /* Slate 800 - Panels, cards */
+  --color-surface-elevated: #334155; /* Slate 700 - Modals, tooltips */
+  --color-border-subtle: rgba(255, 255, 255, 0.1); /* Separators */
+  --color-text-primary: #f8fafc; /* Slate 50 - Titles, critical values */
+  --color-text-secondary: #94a3b8; /* Slate 400 - Labels, descriptions */
+  
+  /* Colors - Functional */
+  --color-brand-primary: #3b82f6; /* Blue 500 - Primary CTA */
+  --color-utility-success: #22c55e; /* Green 500 - Confirmation, HP */
+  --color-utility-warning: #eab308; /* Yellow 500 - Attention */
+  --color-utility-danger: #ef4444; /* Red 500 - Error, enemy, damage */
+  --color-utility-info: #38bdf8; /* Sky 400 - Neutral info */
+  
+  /* Colors - Rarity */
+  --color-rarity-common: #94a3b8; /* Slate 400 */
+  --color-rarity-rare: #3b82f6; /* Blue 500 */
+  --color-rarity-epic: #a855f7; /* Purple 500 */
+  --color-rarity-legendary-start: #f59e0b; /* Amber 500 */
+  --color-rarity-legendary-end: #ef4444; /* Red 500 */
+  
+  /* Spacing System (4px base grid) */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 0.75rem; /* 12px */
+  --spacing-lg: 1rem; /* 16px */
+  --spacing-xl: 1.5rem; /* 24px */
+  --spacing-2xl: 2rem; /* 32px */
+  --spacing-3xl: 3rem; /* 48px */
+  --spacing-4xl: 4rem; /* 64px */
+  
+  /* Border Radius */
+  --radius-sm: 0.25rem; /* 4px - Small elements */
+  --radius-md: 0.5rem; /* 8px - Buttons, compact cards */
+  --radius-lg: 1rem; /* 16px - Large cards, modals */
+  
+  /* Typography Scale */
+  --text-display: 2.5rem; /* 40px - Damage numbers, victory/defeat */
+  --text-h1: 1.5rem; /* 24px - Main screen titles */
+  --text-h2: 1.25rem; /* 20px - Card names, subtitles */
+  --text-body: 1rem; /* 16px - Standard text */
+  --text-caption: 0.875rem; /* 14px - Secondary stats */
+  --text-tiny: 0.75rem; /* 12px - Legal text, metadata */
+  
+  /* Motion System */
+  --motion-fast: 120ms;
+  --motion-normal: 180ms;
+  --motion-slow: 250ms;
+  
+  /* Shadows & Elevation */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-glow-common: 0 0 10px rgba(148, 163, 184, 0.3);
+  --shadow-glow-rare: 0 0 15px rgba(59, 130, 246, 0.4);
+  --shadow-glow-epic: 0 0 20px rgba(168, 85, 247, 0.5);
+  --shadow-glow-legendary: 0 0 25px rgba(249, 115, 22, 0.6);
+}
+
+/* Semantic Tokens */
+
+.bg-canvas {
+  background-color: var(--color-canvas);
+}
+
+.bg-surface-base {
+  background-color: var(--color-surface-base);
+}
+
+.bg-surface-elevated {
+  background-color: var(--color-surface-elevated);
+}
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.border-subtle {
+  border-color: var(--color-border-subtle);
+}
+
+/* Component Tokens - Card System */
+
+.card-frame-common {
+  border-color: var(--color-rarity-common);
+  box-shadow: var(--shadow-glow-common);
+}
+
+.card-frame-rare {
+  border-color: var(--color-rarity-rare);
+  box-shadow: var(--shadow-glow-rare);
+}
+
+.card-frame-epic {
+  border-color: var(--color-rarity-epic);
+  box-shadow: var(--shadow-glow-epic);
+}
+
+.card-frame-legendary {
+  border-image: linear-gradient(135deg, var(--color-rarity-legendary-start), var(--color-rarity-legendary-end)) 1;
+  box-shadow: var(--shadow-glow-legendary);
+  animation: pulse 3s ease-in-out infinite;
+}
+
+/* Motion Preferences */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .card-frame-legendary {
+    animation: none;
+  }
+  
+  .pulse-slow,
+  .animate-pulse-slow {
+    animation: none;
+  }
+}
+
+/* Accessibility Improvements */
+
+/* Focus States - WCAG 2.2 AA compliant */
+.focus-ring {
+  outline: 2px solid var(--color-brand-primary);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-border-subtle: rgba(255, 255, 255, 0.3);
+    --color-text-secondary: #cbd5e1; /* Brighter secondary text */
+  }
+  
+  .card-frame-common,
+  .card-frame-rare,
+  .card-frame-epic {
+    border-width: 3px;
+  }
+  
+  .card-frame-legendary {
+    border-width: 4px;
+  }
+}
+
+/* Force Colors Mode (Windows High Contrast) */
+@media (forced-colors: active) {
+  .interactive-element {
+    border: 1px solid ButtonText;
+  }
+  
+  .interactive-element:hover {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}
+
+/* Typography Utilities */
+
+.text-display {
+  font-size: var(--text-display);
+  line-height: 1.2;
+}
+
+/* Responsive Typography - Scale down on smaller screens */
+@media (max-width: 768px) {
+  .text-display {
+    font-size: 2rem; /* 32px instead of 40px */
+  }
+  
+  .text-h1 {
+    font-size: 1.25rem; /* 20px instead of 24px */
+  }
+  
+  .text-h2 {
+    font-size: 1.125rem; /* 18px instead of 20px */
+  }
+}
+
+.text-h1 {
+  font-size: var(--text-h1);
+  line-height: 1.4;
+}
+
+.text-h2 {
+  font-size: var(--text-h2);
+  line-height: 1.4;
+}
+
+.text-body {
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
+
+.text-caption {
+  font-size: var(--text-caption);
+  line-height: 1.4;
+}
+
+.text-tiny {
+  font-size: var(--text-tiny);
+  line-height: 1.3;
+}
+
+/* Layout Utilities */
+
+.layout-gutter {
+  padding: var(--spacing-lg);
+}
+
+.layout-spacing {
+  gap: var(--spacing-lg);
+}
+
+/* Interactive States */
+
+.interactive-element {
+  transition-property: transform, opacity, box-shadow;
+  transition-duration: var(--motion-fast);
+  transition-timing-function: ease-out;
+}
+
+.interactive-element:hover {
+  transform: translateY(-1px);
+}
+
+.interactive-element:active {
+  transform: scale(0.98);
+}
+
+/* Thumb Zone (bottom 40% of screen) */
+.thumb-zone {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40vh;
+  pointer-events: none;
+}
+
+.thumb-zone > * {
+  pointer-events: auto;
+}
+
+/* Scrollbar Utilities */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Safari and Chrome */
+}
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sr-only:focus,
+.focus\:not-sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: initial;
+  margin: initial;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}

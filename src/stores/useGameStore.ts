@@ -6,7 +6,7 @@ import { rollGacha } from '../game/logic/gachaSystem';
 import { fuseCard } from '../game/logic/fusionSystem';
 import { CARD_POOL } from '../data/cards';
 
-export type GameState = 'lobby' | 'playing' | 'gameover' | 'shop' | 'gacha_reveal';
+export type GameState = 'lobby' | 'playing' | 'gameover' | 'shop' | 'gacha_reveal' | 'deck_builder';
 
 interface GameStore {
   gameState: GameState;
@@ -22,8 +22,10 @@ interface GameStore {
   playerMaxHP: number;
   enemyHP: number;
   enemyMaxHP: number;
+  gameTime: number;
 
   updateStats: (pHP: number, pMaxHP: number, eHP: number, eMaxHP: number) => void;
+  updateGameTime: (time: number) => void;
 
   activeCards: ActiveCardState[];
   updateActiveCards: (cards: ActiveCardState[]) => void;
@@ -58,6 +60,7 @@ export const useGameStore = create<GameStore>()(
       playerMaxHP: 100,
       enemyHP: 100,
       enemyMaxHP: 100,
+      gameTime: 30,
 
       updateStats: (pHP, pMaxHP, eHP, eMaxHP) => set({
         playerHP: pHP,
@@ -66,12 +69,14 @@ export const useGameStore = create<GameStore>()(
         enemyMaxHP: eMaxHP
       }),
 
+      updateGameTime: (time) => set({ gameTime: time }),
+
       activeCards: [],
       updateActiveCards: (cards) => set({ activeCards: cards }),
 
       inventory: [],
       deck: [],
-      gold: 10000, // High starting gold for testing
+      gold: 1000000, // Massive starting gold for testing
       wins: 0,
       lastRolledCard: null,
 
