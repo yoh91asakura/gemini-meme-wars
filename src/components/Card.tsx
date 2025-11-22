@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { Card as CardType } from '../game/logic/types';
 
 interface CardProps {
@@ -18,9 +18,9 @@ export const Card = ({
   manaProgress = 0,
   state = 'idle',
   onClick,
-  onLongPress 
+  onLongPress: _onLongPress 
 }: CardProps) => {
-  const [isPressed, setIsPressed] = useState(false);
+  const [_isPressed, _setIsPressed] = useState(false);
 
   // UI Spec Section 3.4 - Rarity & FX
   const rarityStyles = {
@@ -97,11 +97,11 @@ export const Card = ({
 
   // Touch event handlers for mobile long press
   const handleTouchStart = () => {
-    setIsPressed(true);
+    _setIsPressed(true);
   };
 
   const handleTouchEnd = () => {
-    setIsPressed(false);
+    _setIsPressed(false);
   };
 
   // Keyboard event handlers for accessibility

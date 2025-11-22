@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGameStore } from '../stores/useGameStore';
 import { Card } from './Card';
 
@@ -19,7 +19,7 @@ export const GachaScreen = () => {
   const [autoRoll, setAutoRoll] = useState(false);
 
   // Auto-roll au démarrage si pas d'inventaire
-  React.useEffect(() => {
+  useEffect(() => {
     if (inventory.length === 0 && gold >= 50) {
       // Auto-roll plusieurs cartes au démarrage
       for (let i = 0; i < 10; i++) {
@@ -33,8 +33,8 @@ export const GachaScreen = () => {
   }, []);
 
   // Auto-roll continu
-  React.useEffect(() => {
-    let interval: NodeJS.Timeout;
+  useEffect(() => {
+    let interval: number;
     
     if (autoRoll) {
       interval = setInterval(() => {

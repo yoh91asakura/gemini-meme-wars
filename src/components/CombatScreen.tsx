@@ -11,8 +11,7 @@ export const CombatScreen = () => {
     return { ...ac, card: cardDef };
   });
   
-  // For now, use deck cards as player cards in combat
-  const playerCards = deck;
+  // Player cards are handled directly from deck in JSX
 
   return (
     <div className="absolute inset-0 z-30 pointer-events-none flex flex-col" style={{ background: 'transparent' }}>

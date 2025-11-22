@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { GameCanvas } from './components/GameCanvas'
 import { useGameStore } from './stores/useGameStore'
-import { HUD } from './components/HUD'
 import { GameOver } from './components/GameOver'
 import { GachaScreen } from './components/GachaScreen'
 import { CombatScreen } from './components/CombatScreen'
@@ -36,7 +35,6 @@ function App() {
 
       {/* UI Overlay Layer */}
       <main id="main-content" className="w-full h-full relative z-20">
-        {gameState === 'playing' && <HUD />}
         {gameState === 'playing' && <CombatScreen />}
         {gameState === 'gameover' && <GameOver />}
         {(gameState === 'shop' || gameState === 'gacha_reveal') && <GachaScreen />}
