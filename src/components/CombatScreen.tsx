@@ -14,9 +14,9 @@ export const CombatScreen = () => {
   // Player cards are handled directly from deck in JSX
 
   return (
-    <div className="absolute inset-0 z-30 pointer-events-none flex flex-col" style={{ background: 'transparent' }}>
+    <div className="fixed inset-0 w-screen h-screen flex flex-col pointer-events-none" style={{ zIndex: 30 }}>
       {/* Top HUD (Enemy) */}
-      <div className="w-full p-4 pointer-events-auto">
+      <div className="w-full flex-shrink-0 p-6 pointer-events-auto">
         {/* Enemy HP Bar */}
         <div className="w-full bg-slate-800 border border-slate-700 rounded-lg p-4 mb-2">
           <div className="flex items-center justify-between mb-2">
@@ -60,13 +60,13 @@ export const CombatScreen = () => {
       </div>
 
       {/* Center Arena - Clean for Phaser */}
-      <div className="flex-1 relative">
-        {/* This space is for Phaser game canvas */}
+      <div className="flex-1 w-full relative">
+        {/* This space is for Phaser game canvas - full screen coverage */}
       </div>
 
       {/* Bottom Player HUD */}
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-        <div className="p-4 pointer-events-auto">
+      <div className="absolute bottom-0 left-0 right-0 w-full pointer-events-none">
+        <div className="p-6 pointer-events-auto">
           {/* Player HP Bar */}
           <div className="w-full bg-slate-800/90 backdrop-blur-md border border-slate-700 rounded-lg p-4 mb-4">
             <div className="flex items-center justify-between mb-2">
@@ -120,8 +120,8 @@ export const CombatScreen = () => {
       </div>
 
       {/* Side Panels (Desktop only) */}
-      <div className="hidden md:block">
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 flex flex-col gap-2 max-h-screen overflow-y-auto pointer-events-auto">
+      <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 pointer-events-auto">
+        <div className="flex flex-col gap-2 max-h-screen overflow-y-auto">
           <div className="text-xs text-slate-400 font-bold mb-1 text-center">ENEMY</div>
           {enemyCards.map((enemyCard, index) => {
             if (!enemyCard.card) return null;
