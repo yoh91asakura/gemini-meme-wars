@@ -56,14 +56,22 @@ export const HUD = () => {
         label="🧙‍♂️"
         align="left"
       />
-      <div className="flex flex-col items-center gap-1 md:gap-2 bg-black/60 backdrop-blur-md px-3 py-1 md:px-4 md:py-2 rounded-xl border border-white/10">
+      <div className="flex flex-col items-center gap-1 md:gap-2 bg-black/60 backdrop-blur-md px-3 py-1 md:px-4 md:py-2 rounded-xl border border-white/10 pointer-events-auto">
         <div className="text-2xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500 drop-shadow-lg italic">VS</div>
-        <button
-          onClick={handleSkipBattle}
-          className="pointer-events-auto px-2 py-1 md:px-3 md:py-1 bg-gradient-to-b from-yellow-500 to-orange-600 text-black font-bold text-xs md:text-sm rounded-lg hover:from-yellow-400 hover:to-orange-500 transition-all hover:scale-105 shadow-lg active:scale-95 touch-manipulation"
-        >
-          ⏭️ SKIP
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleSkipBattle}
+            className="px-2 py-1 md:px-3 md:py-1 bg-gradient-to-b from-yellow-500 to-orange-600 text-black font-bold text-xs md:text-sm rounded-lg hover:from-yellow-400 hover:to-orange-500 transition-all hover:scale-105 shadow-lg active:scale-95 touch-manipulation"
+          >
+            ⏭️ SKIP
+          </button>
+          <button
+            onClick={() => setGameState('shop')}
+            className="px-2 py-1 md:px-3 md:py-1 bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold text-xs md:text-sm rounded-lg transition-all hover:scale-105 shadow-lg active:scale-95 touch-manipulation border border-slate-500"
+          >
+            🚪 EXIT
+          </button>
+        </div>
       </div>
       <ProgressBar
         current={enemyHP}
