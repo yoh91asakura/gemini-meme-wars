@@ -10,7 +10,7 @@ Les stats du joueur sont la somme de ses cartes, et tout l’intérêt est de cr
 Le jeu est un roguelite / auto-battler PvP très inspiré de Meme Mayhem : duel en vue de côté, emojis qui partent en flux continu et focus sur les builds absurdes et les synergies.[^2][^1]
 Contrairement à Meme Mayhem où l’ulti est attaché au personnage, ici ce sont les cartes elles‑mêmes qui possèdent une jauge de mana et déclenchent leur propre ultime (dégâts ou buff) quand elles sont chargées.[^5][^2]
 
-Deux joueurs (ou un joueur vs IA) se font face, avatar à gauche et avatar à droite, et chacun tire automatiquement des emojis en fonction de son deck, pendant que le joueur humain se déplace légèrement pour esquiver comme dans un bullet‑hell light.[^6][^2]
+Deux joueurs (ou un joueur vs IA) se font face, avatar à gauche et avatar à droite, chacun entièrement fixe, et chacun tire automatiquement des emojis en fonction de son deck dans un duel purement autobattler.[^6][^2]
 Le but à long terme est de pousser les joueurs à explorer la méta et à découvrir des combinaisons de cartes extrêmement fortes, tout en gardant un cœur de partie simple : “mes stats + mes combos vs les tiennes, que le meilleur deck gagne”.[^4][^6]
 
 ### Boucle de jeu globale
@@ -62,14 +62,14 @@ Le joueur doit apprendre intuitivement quels rôles remplissent ses cartes et co
 Chaque carte possède deux valeurs clés de mana : un **mana max** (quantité nécessaire pour déclencher l’ulti) et éventuellement un modificateur sur la **régénération globale** du joueur.[^19][^2]
 Le joueur a une stat de régénération de mana globale (issue de ses cartes) qui remplit, à chaque tic de combat, les jauges de toutes les cartes simultanément, comme l’énergie qui charge les ultis dans de nombreux autobattlers.[^13][^2]
 
-En plus de cette regen passive, certaines mécaniques ajoutent de la mana sur des événements : toucher l’adversaire, être touché, esquiver “de justesse”, ou déclencher des effets de cartes spécifiques.[^20][^2]
+En plus de cette regen passive, certaines mécaniques ajoutent de la mana sur des événements : toucher l'adversaire, être touché, esquiver (proc de la stat), ou déclencher des effets de cartes spécifiques.[^20][^2]
 Cela permet par exemple des cartes de type “brain” qui brûlent ou volent l’énergie adverse, ou des cartes d’accélération qui donnent des pics d’énergie sous conditions.[^2]
 
 Quand la jauge d’une carte atteint ou dépasse son mana max, l’ulti de cette carte est automatiquement lancé : l’UI fait “proccer” la carte (animation, glow), un effet se joue sur l’avatar, puis l’effet mécanique est résolu.[^5][^2]
 Après l’ulti, la jauge est vidée ou réduite selon le design (par exemple remise à zéro ou diminuée d’un certain pourcentage), pour éviter les boucles instantanées d’ultis infinis.[^19][^2]
 
 Des limites (caps) et rendements décroissants sont prévues sur la regen de mana et certains multiplicateurs d’ultis, afin que les builds late game soient absurdes mais pas littéralement infinis.[^21][^22]
-L’objectif est que “casser le jeu” demande une combinaison de cartes rares, un tuning fin de régénération et suffisamment de skill pour rester en vie assez longtemps.[^18][^16]
+L'objectif est que "casser le jeu" demande une combinaison de cartes rares, un tuning fin de régénération et suffisamment de stats défensives pour tenir assez longtemps.[^18][^16]
 
 ### Types d’ultis de cartes
 
@@ -84,13 +84,13 @@ Ils jouent un rôle central dans les match‑ups haut niveau, où empêcher le t
 
 ### Système de combat PvP
 
-Chaque match se déroule dans une arène fixe en 2D : avatar du joueur à gauche, avatar ennemi à droite, chacun dans une zone de mouvement restreinte mais suffisante pour esquiver.[^6][^2]
+Chaque match se déroule dans une arène fixe en 2D : avatar du joueur à gauche, avatar ennemi à droite, tous deux entièrement immobiles.[^6][^2]
 Les deux avatars tirent en continu des projectiles‑emojis dont le pattern (cadence, forme, volume) dépend directement des cartes équipées et de leurs passifs.[^4][^2]
 
 Les cartes sont rendues en colonnes ou en éventail de chaque côté de l’écran, près de leur avatar respectif, et restent visuellement statiques sauf au moment où leur passif ou ulti se déclenche.[^4][^2]
-Les projectiles, eux, sortent du corps ou de l’arme de l’avatar et traversent l’écran, formant des “murs” d’emojis qu’il faut lisiblement esquiver comme dans un auto‑battler / shmup hybride.[^24][^2]
+Les projectiles, eux, sortent du corps ou de l'arme de l'avatar et traversent l'écran vers l'adversaire, l'impact étant résolu automatiquement par les stats.[^24][^2]
 
-Un projectile qui touche la hitbox de l’avatar applique des dégâts calculés à partir de la force du joueur, des multiplicateurs de carte et de la défense adverse, sauf si un jet d’esquive ou un effet de réduction annule/mitige l’impact.[^16][^2]
+Un projectile qui atteint l'avatar applique des dégâts calculés à partir de la force du joueur, des multiplicateurs de carte et de la défense adverse, sauf si un jet d'esquive (basé sur la stat) ou un effet de réduction annule/mitige l'impact. Si l'esquive proc, une animation d'esquive se joue sur l'avatar.[^16][^2]
 Il n’y a pas de bouclier séparé dans la V1 : armure et PV viennent amortir les coups, mais chaque hit qui passe se ressent dans la barre de vie, à la manière des face‑tanking fights de Meme Mayhem.[^15][^2]
 
 ### PvP, IA à decks préfaits et flow de match
@@ -98,7 +98,7 @@ Il n’y a pas de bouclier séparé dans la V1 : armure et PV viennent amortir
 La version initiale fonctionne en “PvP asymétrique” : le joueur affronte des IA qui utilisent exactement les mêmes règles, mais avec des decks pré‑configurés.[^13][^2]
 Chaque IA possède un ou plusieurs decks JSON prédéfinis, avec une identité de build claire (aggro, tank, ulti‑spam, drain d’énergie, etc.), ce qui permet de calibrer précisément la difficulté.[^3][^9]
 
-Le flow d’un match est : sélection / validation du deck → matchmaking / choix d’un deck IA adapté → entrée en arène (3–2–1) → combat automatique des tirs + esquive manuelle → résolution de la victoire/défaite → récompenses.[^6][^13]
+Le flow d'un match est : sélection / validation du deck → matchmaking / choix d'un deck IA adapté → entrée en arène (3–2–1) → combat entièrement automatique → résolution de la victoire/défaite → récompenses.[^6][^13]
 En cas de double KO (les deux PV tombent à 0 en même temps), une règle explicite décide de l’issue (par exemple avantage au joueur ou match nul selon le mode).[^23][^6]
 
 À terme, la même logique de combat peut être utilisée en PvP réel (asynchrone ou temps réel) : chaque camp charge ses stats et son deck depuis le serveur, puis le moteur résout le duel.[^11][^13]
@@ -110,10 +110,10 @@ La philosophie de design assume que les joueurs vont chercher à “briser” le
 Le jeu est construit pour rendre ces combos possibles mais exigeants, en imposant des coûts, des caps, des contreparties et des timings d’ulti qui ne se mettent en place qu’après un certain temps de combat.[^7][^19]
 
 Les rounds early sont volontairement explosifs : peu de PV, peu de regen, quelques passifs simples et des ultis peu fréquents, ce qui donne des matchs de quelques secondes à une minute.[^10][^11]
-En late game, la montée en PV, régénération, réduction de dégâts et sophistication des ultis permet des duels beaucoup plus longs, où la moindre erreur d’esquive ou de timing d’ulti devient décisive.[^18][^12]
+En late game, la montée en PV, régénération, réduction de dégâts et sophistication des ultis permet des duels beaucoup plus longs, où les synergies de deck et les timings d'ultis deviennent décisifs.[^18][^12]
 
 Ce contraste sprint / marathon est au cœur de la fantasy : sentir la puissance croissante du deck à mesure qu’il passe de “tout le monde meurt vite” à “seuls les builds les plus optimisés et les meilleurs joueurs arrivent à se départager”.[^2][^6]
-Ainsi, le jeu récompense à la fois la créativité en deckbuilding (trouver des combos de cartes et d’ultis) et la maîtrise mécanique (esquiver les murs d’emojis et gérer les timings).[^13][^2]
+Ainsi, le jeu récompense la créativité en deckbuilding : trouver des combos de cartes et d'ultis qui se synergisent pour dominer le duel.[^13][^2]
 <span style="display:none">[^25][^26][^27][^28][^29][^30][^31]</span>
 
 <div align="center">⁂</div>

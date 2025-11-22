@@ -57,6 +57,8 @@ Les bordures et ombres des cartes utilisent toujours les mêmes épaisseurs et s
 L’écran de combat est structuré autour de l’arène centrale (canvas), avec un avatar à gauche et un à droite, en miroir.[^17][^18]
 Les cartes du joueur sont affichées en colonne ou éventail près de son avatar (gauche), leurs barres de mana visibles en permanence.[^17][^8]
 
+Les avatars sont entièrement fixes et ne se déplacent jamais. Lorsque la stat d'esquive d'un avatar proc lors d'un impact, une animation d'esquive (dodge visuel, lueur, effet de particules) se joue sur l'avatar concerné sans mouvement de position.
+
 Les cartes ennemies (IA ou autre joueur) sont affichées côté droit, en version réduite (emoji + état d’ulti), pour éviter la surcharge tout en donnant des infos de lecture.[^18][^16]
 Les jauges de vie du joueur et de l’ennemi sont situées en haut de l’écran, barres larges, couleurs distinctes, avec valeurs numériques optionnelles.[^2][^1]
 
