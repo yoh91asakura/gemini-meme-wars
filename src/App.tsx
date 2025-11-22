@@ -41,9 +41,6 @@ function App() {
         {gameState === 'deck_builder' && <DeckBuilder />}
       </main>
       
-      <div className="absolute inset-0 z-10 pointer-events-none p-4" aria-hidden="true">
-          <h1 className="text-sm opacity-50 font-bold text-yellow-400">Gemini Meme Wars v0.1</h1>
-      </div>
 
       {/* Live Region for Announcements */}
       <div 

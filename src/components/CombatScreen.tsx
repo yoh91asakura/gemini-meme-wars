@@ -3,7 +3,7 @@ import { Card } from './Card';
 import { CARD_POOL } from '../data/cards';
 
 export const CombatScreen = () => {
-  const { deck, activeCards, playerHP, playerMaxHP, enemyHP, enemyMaxHP, gameTime } = useGameStore();
+  const { deck, activeCards, playerHP, playerMaxHP, enemyHP, enemyMaxHP, gameTime, setGameState } = useGameStore();
 
   // Get actual enemy cards from active game state - use card definitions from pool
   const enemyCards = activeCards.slice(0, 3).map(ac => {
@@ -33,12 +33,28 @@ export const CombatScreen = () => {
           </div>
         </div>
 
-        {/* Timer */}
+        {/* Timer & Controls */}
         <div className="text-center">
-          <div className={`text-2xl font-mono font-bold ${
+          <div className={`text-2xl font-mono font-bold mb-2 ${
             gameTime <= 10 ? 'text-yellow-400 animate-pulse' : 'text-slate-400'
           }`}>
             {Math.ceil(gameTime)}s
+          </div>
+          
+          {/* Combat Controls */}
+          <div className="flex justify-center gap-2">
+            <button
+              onClick={() => setGameState('gameover')}
+              className="px-4 py-1 bg-slate-700/80 hover:bg-slate-600/80 border border-slate-600 rounded-md text-sm text-slate-300 hover:text-white transition-all duration-150"
+            >
+              Skip Battle
+            </button>
+            <button
+              onClick={() => setGameState('shop')}
+              className="px-4 py-1 bg-slate-700/80 hover:bg-slate-600/80 border border-slate-600 rounded-md text-sm text-slate-300 hover:text-white transition-all duration-150"
+            >
+              Exit
+            </button>
           </div>
         </div>
       </div>
